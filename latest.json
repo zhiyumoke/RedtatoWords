@@ -1,0 +1,20 @@
+{
+  "version": "0.9.9",
+  "tag": "v0.9.9",
+  "releaseName": "RedtatoWords 0.9.9",
+  "releaseUrl": "https://github.com/zhiyumoke/RedtatoWords/releases/tag/v0.9.9",
+  "notes": "## RedtatoWords 0.9.9\n\nFirst public build. Everything below is new.\n\n### Getting started\n\nOn first launch the app walks you through two screens:\n\n1. **Welcome & sign-in** — sign in to your account first. Working signed-in\n   noticeably reduces the chance of being rate-limited, so this step is required.\n2. **Guided tour** — seven short clips, one per feature. Each clip loops until you\n   move on. You can skip it and re-open it any time from **Help**.\n\n### Highlights\n\n- **Candidate list** — collects suggestions through two independent channels\n  (network responses and page rendering) and merges them into one de-duplicated list.\n- **TAG cloud** — segments every candidate automatically, de-duplicates the parts and\n  ranks them by frequency. Multi-select tags to expand the next round.\n- **Round timeline** — every round is kept. Jump back to any earlier round at any time.\n- **Drag to combine** — drag one tag onto another to build a combined tag.\n- **Batch mode** — feed several search terms at once and merge all results into one list.\n- **Export** — copy everything, or export to TXT / CSV / Excel / JSON.\n- **Achievements** — five hidden ones. The entry point only appears once you earn your first.\n- **Update check** — checks quietly on startup and only speaks up when a new version\n  exists. You can also check manually from *Settings*.\n- **Fully local** — no account, no telemetry, nothing leaves your machine.\n\n### Downloads\n\n| Platform | File |\n| --- | --- |\n| Windows 10 / 11 (x64) | `redtato-words-0.9.9-win-x64.exe` — installer |\n| Windows 10 / 11 (x64) | `redtato-words-0.9.9-win-x64.zip` — portable |\n\n### Notes\n\n- The Windows installer is **unsigned**, so SmartScreen may warn you.\n  Choose **More info → Run anyway**.\n- macOS builds are published in a follow-up release.\n",
+  "publishedAt": "2026-10-08T08:57:38Z",
+  "assets": [
+    {
+      "name": "redtato-words-0.9.9-win-x64.exe",
+      "url": "https://github.com/zhiyumoke/RedtatoWords/releases/download/v0.9.9/redtato-words-0.9.9-win-x64.exe",
+      "size": 115914668
+    },
+    {
+      "name": "redtato-words-0.9.9-win-x64.zip",
+      "url": "https://github.com/zhiyumoke/RedtatoWords/releases/download/v0.9.9/redtato-words-0.9.9-win-x64.zip",
+      "size": 154808444
+    }
+  ]
+}
