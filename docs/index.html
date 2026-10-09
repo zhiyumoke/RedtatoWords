@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redtato Words — 批量采集平台搜索联想词，整理成你的选题库</title>
+<meta name="description" content="Redtato Words 是一款纯本地运行的桌面工具：批量采集平台搜索联想词（候选词），自动合并去重、拆分成 TAG 云、拖拽组合、逐轮扩展，一键复制或导出。Windows x64，免费开源，MIT 许可。">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0d12" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/png" href="media/icon.png">
+<link rel="apple-touch-icon" href="media/icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Redtato Words — 批量采集平台搜索联想词">
+<meta property="og:description" content="一次输入多个词，自动跑完搜索联想；候选词合并去重、拆成 TAG 云，点几下就扩展出下一轮。纯本地运行，数据不出本机。">
+<meta property="og:image" content="media/icon.png">
+<link rel="stylesheet" href="style.css">
+<noscript>
+  <!-- 脚本被禁用时，滚动进场的初始隐藏状态必须解除，否则内容不可见 -->
+  <style>.reveal{opacity:1!important;transform:none!important}</style>
+</noscript>
+</head>
+<body>
+
+<a class="skip-link" href="#main">跳到主要内容</a>
+
+<!-- 内联图标精灵：不引入任何外部图标库 -->
+<svg class="sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <symbol id="i-list" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8.5 6h12M8.5 12h12M8.5 18h12"/><path d="M3.6 6h.01M3.6 12h.01M3.6 18h.01"/>
+  </symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m12 2.8 9 4.7-9 4.7-9-4.7 9-4.7Z"/><path d="m3 12.5 9 4.7 9-4.7"/><path d="m3 17 9 4.7 9-4.7"/>
+  </symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2A2 2 0 0 1 2.8 12V4.8A2 2 0 0 1 4.8 2.8H12a2 2 0 0 1 1.4.6l7.2 7.2a2 2 0 0 1 0 2.8Z"/>
+    <path d="M7.6 7.6h.01"/>
+  </symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 11a8 8 0 0 0-13.7-5.1L3 9"/><path d="M3 4v5h5"/>
+    <path d="M4 13a8 8 0 0 0 13.7 5.1L21 15"/><path d="M21 20v-5h-5"/>
+  </symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="9" y="9" width="12" height="12" rx="2.5"/>
+    <path d="M5.5 15h-.7a2.3 2.3 0 0 1-2.3-2.3V4.8a2.3 2.3 0 0 1 2.3-2.3h7.9A2.3 2.3 0 0 1 15 4.8v.7"/>
+  </symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 3.5h10V9a5 5 0 0 1-10 0V3.5Z"/>
+    <path d="M7 5H4.5a2.25 2.25 0 0 0 0 4.5H7"/><path d="M17 5h2.5a2.25 2.25 0 0 1 0 4.5H17"/>
+    <path d="M12 14v3.5"/><path d="M8.5 20.5h7"/>
+  </symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.5 14.3A8.5 8.5 0 0 1 9.7 3.5a8.5 8.5 0 1 0 10.8 10.8Z"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 21.5s7.5-3.6 7.5-9.5V5.2L12 2.2 4.5 5.2v6.8c0 5.9 7.5 9.5 7.5 9.5Z"/>
+    <path d="m9 11.8 2.2 2.2 4-4.2"/>
+  </symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2.5" y="3.5" width="19" height="13" rx="2.5"/><path d="M9 20.5h6"/><path d="M12 16.5v4"/>
+  </symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3v12"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4.5 20.5h15"/>
+  </symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.5 12a8.5 8.5 0 1 1-2.5-6"/><path d="M20.5 3.5V9H15"/>
+  </symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>
+  </symbol>
+  <symbol id="i-external" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 4h6v6"/><path d="m20 4-8.5 8.5"/>
+    <path d="M18.5 14.5v3.8A2.7 2.7 0 0 1 15.8 21H5.7A2.7 2.7 0 0 1 3 18.3V8.2A2.7 2.7 0 0 1 5.7 5.5h3.8"/>
+  </symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3 13.9 8.9 19.8 10.8 13.9 12.7 12 18.6 10.1 12.7 4.2 10.8 10.1 8.9 12 3Z"/>
+  </symbol>
+  <symbol id="i-github" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2c-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.68.41.35.78 1.05.78 2.12v3.14c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/>
+  </symbol>
+</svg>
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href="#top">
+      <img class="brand__mark" src="media/icon.png" width="32" height="32" alt="">
+      <span class="brand__name">Redtato&nbsp;Words</span>
+    </a>
+    <nav class="site-nav" aria-label="页面导航">
+      <a href="#demo">功能演示</a>
+      <a href="#features">亮点</a>
+      <a href="#faq">常见问题</a>
+    </nav>
+    <a class="btn btn--primary btn--sm" href="https://github.com/zhiyumoke/RedtatoWords/releases/latest" target="_blank" rel="noopener noreferrer">
+      <svg class="ico" aria-hidden="true"><use href="#i-download"></use></svg>
+      下载
+      <span class="sr-only">（在新标签页打开）</span>
+    </a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============ Hero ============ -->
+  <section class="hero" id="top">
+    <div class="hero__glow" aria-hidden="true"></div>
+    <div class="wrap hero__inner">
+      <div class="hero__copy reveal">
+        <p class="pill">
+          <span class="pill__dot" aria-hidden="true"></span>
+          Windows x64 桌面应用 · v0.9.9
+        </p>
+        <h1 class="hero__title">Redtato&nbsp;Words</h1>
+        <p class="hero__lead">把平台的搜索联想词，一次性收进你的选题库。</p>
+        <p class="hero__sub">
+          输入一个词就能跑完一整轮搜索联想，候选词自动合并去重、拆成 TAG 云，
+          点几下选出方向，再用「下一轮」逐层扩展。为内容创作者的选题与标签整理而生。
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--lg" href="https://github.com/zhiyumoke/RedtatoWords/releases/latest" target="_blank" rel="noopener noreferrer">
+            <svg class="ico" aria-hidden="true"><use href="#i-download"></use></svg>
+            下载最新版本
+            <span class="sr-only">（在新标签页打开）</span>
+          </a>
+          <a class="btn btn--ghost btn--lg" href="https://github.com/zhiyumoke/RedtatoWords" target="_blank" rel="noopener noreferrer">
+            <svg class="ico" aria-hidden="true"><use href="#i-github"></use></svg>
+            查看仓库
+            <span class="sr-only">（在新标签页打开）</span>
+          </a>
+        </div>
+        <p class="hero__note">免费 · 开源 · MIT 许可 · 安装包与免安装压缩包同时在 Releases 提供</p>
+      </div>
+
+      <div class="hero__visual reveal">
+        <div class="mock" role="img" aria-label="Redtato Words 主界面示意图：左侧是搜索词输入与轮次时间线，中间是候选词列表，右侧是自动生成的 TAG 云。">
+          <div class="mock__bar">
+            <span class="mock__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="mock__title">Redtato Words</span>
+            <span class="mock__chip">v0.9.9</span>
+          </div>
+          <div class="mock__body">
+            <div class="mock__col">
+              <p class="mock__label">当前词</p>
+              <div class="mock__input">咖啡<span class="mock__caret" aria-hidden="true"></span></div>
+              <div class="mock__row">
+                <span class="mock__btn mock__btn--on">下一轮</span>
+                <span class="mock__btn">清空</span>
+              </div>
+              <p class="mock__label mock__label--gap">轮次时间线</p>
+              <ul class="mock__rounds">
+                <li>第 1 轮 · 咖啡</li>
+                <li>第 2 轮 · 咖啡 搭配</li>
+                <li class="is-on">第 3 轮 · 咖啡 好喝</li>
+              </ul>
+            </div>
+            <div class="mock__col mock__col--mid">
+              <p class="mock__label">候选词 <b class="mock__count">42</b></p>
+              <ul class="mock__list">
+                <li>咖啡搭配什么好喝</li>
+                <li>咖啡怎么喝才不苦</li>
+                <li>咖啡自制教程</li>
+                <li>咖啡 拿铁 区别</li>
+                <li>咖啡 冷萃 做法</li>
+                <li>咖啡 搭配 甜点</li>
+              </ul>
+            </div>
+            <div class="mock__col mock__col--tags">
+              <p class="mock__label">TAG 云</p>
+              <div class="mock__tags">
+                <span class="mock__tag is-on">搭配</span>
+                <span class="mock__tag">什么</span>
+                <span class="mock__tag is-on">好喝</span>
+                <span class="mock__tag">自制</span>
+                <span class="mock__tag is-combo">搭配 好喝</span>
+                <span class="mock__tag">教程</span>
+                <span class="mock__tag">冷萃</span>
+              </div>
+            </div>
+          </div>
+          <div class="mock__toast" aria-hidden="true">
+            <span class="mock__toast-ico"><svg class="ico" aria-hidden="true"><use href="#i-trophy"></use></svg></span>
+            <span class="mock__toast-txt"><b>成就解锁</b><small>第一桶词</small></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <dl class="stats reveal">
+        <div class="stats__item"><dt>采集通道</dt><dd>2 路</dd></div>
+        <div class="stats__item"><dt>数据上传</dt><dd>0 次</dd></div>
+        <div class="stats__item"><dt>内置演示</dt><dd>6 段</dd></div>
+        <div class="stats__item"><dt>开源许可</dt><dd>MIT</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ 功能演示：6 段动画 ============ -->
+  <section class="section" id="demo" aria-labelledby="demo-title">
+    <div class="wrap">
+      <header class="section__head reveal">
+        <p class="eyebrow"><svg class="ico" aria-hidden="true"><use href="#i-spark"></use></svg> 功能演示</p>
+        <h2 class="section__title" id="demo-title">六步看懂它怎么工作</h2>
+        <p class="section__lead">
+          下面 6 段动画就是从软件内置教程里原样搬过来的，自动循环播放，不用点任何东西。
+        </p>
+      </header>
+
+      <div class="steps">
+        <figure class="step reveal">
+          <div class="step__frame">
+            <div class="step__box">
+              <video class="step__video" src="media/onboarding-step-1.webm"
+                     autoplay loop muted playsinline preload="metadata"
+                     aria-label="第 1 步演示动画：输入关键词，点「下一轮」"></video>
+            </div>
+          </div>
+          <figcaption class="step__cap">
+            <span class="step__num">第 1 步</span>
+            <h3 class="step__title">输入关键词，点「下一轮」</h3>
+            <p class="step__detail">在左上角输入第一轮关键词，然后点右侧「下一轮」开始抓取。程序用真实按键逐字输入，模拟真人操作。</p>
+          </figcaption>
+        </figure>
+
+        <figure class="step reveal">
+          <div class="step__frame">
+            <div class="step__box">
+              <video class="step__video" src="media/onboarding-step-2.webm"
+                     autoplay loop muted playsinline preload="metadata"
+                     aria-label="第 2 步演示动画：候选词自动拆成 TAG"></video>
+            </div>
+          </div>
+          <figcaption class="step__cap">
+            <span class="step__num">第 2 步</span>
+            <h3 class="step__title">候选词自动拆成 TAG</h3>
+            <p class="step__detail">候选词会自动拆词、去重后生成 TAG 云。例如「咖啡搭配什么好喝自制」会拆成 搭配 / 什么 / 好喝 / 自制。</p>
+          </figcaption>
+        </figure>
+
+        <figure class="step reveal">
+          <div class="step__frame">
+            <div class="step__box">
+              <video class="step__video" src="media/onboarding-step-3.webm"
+                     autoplay loop muted playsinline preload="metadata"
+                     aria-label="第 3 步演示动画：多选 TAG，扩展下一轮"></video>
+            </div>
+          </div>
+          <figcaption class="step__cap">
+            <span class="step__num">第 3 步</span>
+            <h3 class="step__title">多选 TAG，扩展下一轮</h3>
+            <p class="step__detail">TAG 可以多选。点「下一轮」会为每个组合分别抓取；新一轮的结果会替换候选词列表，顶部轮次时间线可随时回退。</p>
+          </figcaption>
+        </figure>
+
+        <figure class="step reveal">
+          <div class="step__frame">
+            <div class="step__box">
+              <video class="step__video" src="media/onboarding-step-4.webm"
+                     autoplay loop muted playsinline preload="metadata"
+                     aria-label="第 4 步演示动画：拖拽 TAG 合成组合词"></video>
+            </div>
+          </div>
+          <figcaption class="step__cap">
+            <span class="step__num">第 4 步</span>
+            <h3 class="step__title">拖拽 TAG 合成组合词</h3>
+            <p class="step__detail">把一个 TAG 拖到另一个 TAG 上松手，就能合成组合 TAG —— 拖动时标签跟着鼠标走，松手后自动回位。</p>
+          </figcaption>
+        </figure>
+
+        <figure class="step reveal">
+          <div class="step__frame">
+            <div class="step__box">
+              <video class="step__video" src="media/onboarding-step-5.webm"
+                     autoplay loop muted playsinline preload="metadata"
+                     aria-label="第 5 步演示动画：批量搜索词模式"></video>
+            </div>
+          </div>
+          <figcaption class="step__cap">
+            <span class="step__num">第 5 步</span>
+            <h3 class="step__title">批量搜索词模式</h3>
+            <p class="step__detail">打开「批量搜索词」后，用空格分隔多个搜索词，程序会逐个抓取并汇总到同一个列表。这个模式下不拆分 TAG。</p>
+          </figcaption>
+        </figure>
+
+        <figure class="step reveal">
+          <div class="step__frame">
+            <div class="step__box">
+              <video class="step__video" src="media/onboarding-step-6.webm"
+                     autoplay loop muted playsinline preload="metadata"
+                     aria-label="第 6 步演示动画：复制与导出"></video>
+            </div>
+          </div>
+          <figcaption class="step__cap">
+            <span class="step__num">第 6 步</span>
+            <h3 class="step__title">复制与导出</h3>
+            <p class="step__detail">结果可以一键复制，也能导出成 TXT / CSV / Excel / JSON，方便继续在表格里整理。批量搜索词模式下同样可以导出。</p>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 亮点 ============ -->
+  <section class="section section--alt" id="features" aria-labelledby="features-title">
+    <div class="wrap">
+      <header class="section__head reveal">
+        <p class="eyebrow"><svg class="ico" aria-hidden="true"><use href="#i-spark"></use></svg> 亮点</p>
+        <h2 class="section__title" id="features-title">为「批量找选题」这件事做的一整套细节</h2>
+        <p class="section__lead">从采集、整理到导出，每一步都尽量少让你动手。</p>
+      </header>
+
+      <ul class="grid">
+        <li class="card card--wide reveal">
+          <span class="card__ico"><svg class="ico" aria-hidden="true"><use href="#i-list"></use></svg></span>
+          <h3 class="card__title">批量搜索词模式</h3>
+          <p class="card__text">一次贴进多个搜索词（空格分隔），程序逐个跑完并汇总到同一个列表，自动合并去重。想一次覆盖一整批选题时最省事。</p>
+        </li>
+        <li class="card card--wide reveal">
+          <span class="card__ico"><svg class="ico" aria-hidden="true"><use href="#i-layers"></use></svg></span>
+          <h3 class="card__title">双通道采集</h3>
+          <p class="card__text">同时监听网络响应与页面内容两条通道，两路结果取并集。单条通道漏掉的长尾联想词，另一条通常能补上。</p>
+        </li>
+        <li class="card reveal">
+          <span class="card__ico"><svg class="ico" aria-hidden="true"><use href="#i-tag"></use></svg></span>
+          <h3 class="card__title">自动分词 + TAG 云</h3>
+          <p class="card__text">候选词自动拆词、去重、统计词频。标签支持点击多选，也能拖拽组合，例如「好喝」拖到「搭配」上合成「搭配 好喝」。</p>
+        </li>
+        <li class="card reveal">
+          <span class="card__ico"><svg class="ico" aria-hidden="true"><use href="#i-sync"></use></svg></span>
+          <h3 class="card__title">轮次扩展</h3>
+          <p class="card__text">基于当前候选词与 TAG 生成下一轮搜索词，一轮接一轮逐层扩展。顶部时间线记录每一轮，随时可以回退重来。</p>
+        </li>
+        <li class="card reveal">
+          <span class="card__ico"><svg class="ico" aria-hidden="true"><use href="#i-copy"></use></svg></span>
+          <h3 class="card__title">一键复制与导出</h3>
+          <p class="card__text">复制全部、导出 TXT / CSV / Excel / JSON、删除选中、整表清空。导出时若已选中若干条，就只导出选中的部分。</p>
+        </li>
+        <li class="card reveal">
+          <span class="card__ico"><svg class="ico" aria-hidden="true"><use href="#i-trophy"></use></svg></span>
+          <h3 class="card__title">成就系统（彩蛋）</h3>
+          <p class="card__text">藏了一些隐藏条件的成就，解锁时右下角会弹出提示，随时能在成就面板里回看。纯粹是好玩。</p>
+        </li>
+        <li class="card reveal">
+          <span class="card__ico"><svg class="ico" aria-hidden="true"><use href="#i-moon"></use></svg></span>
+          <h3 class="card__title">深浅色主题</h3>
+          <p class="card__text">默认跟随系统设置，白天黑夜自动切换，长时间整理词表也不刺眼。</p>
+        </li>
+        <li class="card reveal">
+          <span class="card__ico"><svg class="ico" aria-hidden="true"><use href="#i-shield"></use></svg></span>
+          <h3 class="card__title">纯本地运行</h3>
+          <p class="card__text">搜索词、候选词、标签与历史记录都只写在本机的用户数据目录，不经过任何第三方服务。</p>
+        </li>
+        <li class="card reveal">
+          <span class="card__ico"><svg class="ico" aria-hidden="true"><use href="#i-monitor"></use></svg></span>
+          <h3 class="card__title">内置会话窗口登录</h3>
+          <p class="card__text">在软件内置的会话窗口里登录一次，登录态保存在本机独立分区，下次启动依然有效；之后的采集过程对用户不可见。</p>
+        </li>
+        <li class="card reveal">
+          <span class="card__ico"><svg class="ico" aria-hidden="true"><use href="#i-refresh"></use></svg></span>
+          <h3 class="card__title">自动检查更新</h3>
+          <p class="card__text">启动时自动比对最新版本，发现新版本会在界面里提示，一键下载安装，不用手动换包。</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 常见问题 ============ -->
+  <section class="section" id="faq" aria-labelledby="faq-title">
+    <div class="wrap wrap--narrow">
+      <header class="section__head reveal">
+        <p class="eyebrow"><svg class="ico" aria-hidden="true"><use href="#i-spark"></use></svg> 常见问题</p>
+        <h2 class="section__title" id="faq-title">上手前你大概会想问的</h2>
+      </header>
+
+      <div class="faq reveal">
+        <details class="faq__item">
+          <summary class="faq__q">需要登录平台的账号吗？</summary>
+          <div class="faq__a"><p>需要，但只需要一次。软件里有内置的会话窗口，在窗口里完成登录后，登录态会保存在本机的独立分区，之后再打开就能直接采集。</p></div>
+        </details>
+        <details class="faq__item">
+          <summary class="faq__q">我的数据会被上传到什么地方吗？</summary>
+          <div class="faq__a"><p>不会。这是纯本地工具：搜索词、候选词、TAG 和历史记录都存放在本机用户数据目录，不经过任何第三方服务，也没有账号体系。</p></div>
+        </details>
+        <details class="faq__item">
+          <summary class="faq__q">采集的时候我还能正常用电脑吗？</summary>
+          <div class="faq__a"><p>可以。采集在内置的会话窗口里独立进行，整个采集过程对用户不可见，不会抢占你正在使用的前台窗口。</p></div>
+        </details>
+        <details class="faq__item">
+          <summary class="faq__q">结果能导出成什么格式？</summary>
+          <div class="faq__a"><p>一键复制到剪贴板，或者导出成 TXT / CSV / Excel / JSON。列表支持单选、Ctrl 多选、全选与筛选，导出时只导出选中的部分也没问题。</p></div>
+        </details>
+        <details class="faq__item">
+          <summary class="faq__q">支持哪些系统？</summary>
+          <div class="faq__a"><p>当前提供 Windows x64 的安装包（NSIS）与免安装压缩包，两个都在 Releases 页面里。其他平台的支持情况请看仓库说明。</p></div>
+        </details>
+        <details class="faq__item">
+          <summary class="faq__q">怎么更新到新版本？</summary>
+          <div class="faq__a"><p>软件启动时会自动检查更新。发现新版本后会在界面里给出提示，点一下即可下载并安装，不需要手动卸载重装。</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 结尾 CTA ============ -->
+  <section class="section cta" aria-labelledby="cta-title">
+    <div class="wrap">
+      <div class="cta__box reveal">
+        <div class="cta__glow" aria-hidden="true"></div>
+        <h2 class="cta__title" id="cta-title">现在就开始收集你的下一批选题</h2>
+        <p class="cta__text">下载安装包直接装，或者拿免安装压缩包解压即用。全部免费开源。</p>
+        <div class="cta__actions">
+          <a class="btn btn--primary btn--lg" href="https://github.com/zhiyumoke/RedtatoWords/releases/latest" target="_blank" rel="noopener noreferrer">
+            <svg class="ico" aria-hidden="true"><use href="#i-download"></use></svg>
+            前往 Releases 下载
+            <span class="sr-only">（在新标签页打开）</span>
+          </a>
+          <a class="btn btn--ghost btn--lg" href="https://github.com/zhiyumoke/RedtatoWords" target="_blank" rel="noopener noreferrer">
+            <svg class="ico" aria-hidden="true"><use href="#i-github"></use></svg>
+            GitHub 仓库
+            <span class="sr-only">（在新标签页打开）</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <div class="site-footer__brand">
+      <a class="brand" href="#top">
+        <img class="brand__mark" src="media/icon.png" width="32" height="32" alt="">
+        <span class="brand__name">Redtato&nbsp;Words</span>
+      </a>
+      <p class="site-footer__tag">批量采集平台搜索联想词，整理成可用的选题与标签。</p>
+    </div>
+    <nav class="site-footer__nav" aria-label="页脚导航">
+      <div class="site-footer__col">
+        <h2 class="site-footer__h">产品</h2>
+        <ul>
+          <li><a href="#demo">功能演示</a></li>
+          <li><a href="#features">亮点</a></li>
+          <li><a href="#faq">常见问题</a></li>
+          <li><a href="https://github.com/zhiyumoke/RedtatoWords/releases/latest" target="_blank" rel="noopener noreferrer">下载<span class="sr-only">（在新标签页打开）</span></a></li>
+        </ul>
+      </div>
+      <div class="site-footer__col">
+        <h2 class="site-footer__h">资源</h2>
+        <ul>
+          <li><a href="https://github.com/zhiyumoke/RedtatoWords" target="_blank" rel="noopener noreferrer">GitHub 仓库<span class="sr-only">（在新标签页打开）</span></a></li>
+          <li><a href="https://github.com/zhiyumoke/RedtatoWords/releases" target="_blank" rel="noopener noreferrer">全部版本<span class="sr-only">（在新标签页打开）</span></a></li>
+          <li><a href="https://github.com/zhiyumoke/RedtatoWords/issues" target="_blank" rel="noopener noreferrer">反馈问题<span class="sr-only">（在新标签页打开）</span></a></li>
+          <li><a href="https://github.com/zhiyumoke/RedtatoWords/blob/main/docs/README.md" target="_blank" rel="noopener noreferrer">预览说明<span class="sr-only">（在新标签页打开）</span></a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="wrap site-footer__bottom">
+    <p>© <span id="year">2026</span> Redtato Words · 版本 v0.9.9 · MIT License</p>
+    <p>本工具用于个人学习与研究，请在遵守目标平台使用条款的前提下使用。</p>
+  </div>
+</footer>
+
+<script src="script.js" defer></script>
+</body>
+</html>
