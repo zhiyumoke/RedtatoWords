@@ -1,20 +1,46 @@
 {
-  "version": "0.9.9",
-  "tag": "v0.9.9",
-  "releaseName": "RedtatoWords 0.9.9",
-  "releaseUrl": "https://github.com/zhiyumoke/RedtatoWords/releases/tag/v0.9.9",
-  "notes": "## RedtatoWords 0.9.9\n\nFirst public build. Everything below is new.\n\n### Getting started\n\nOn first launch the app walks you through two screens:\n\n1. **Welcome & sign-in** — sign in to your account first. Working signed-in\n   noticeably reduces the chance of being rate-limited, so this step is required.\n2. **Guided tour** — seven short clips, one per feature. Each clip loops until you\n   move on. You can skip it and re-open it any time from **Help**.\n\n### Highlights\n\n- **Candidate list** — collects suggestions through two independent channels\n  (network responses and page rendering) and merges them into one de-duplicated list.\n- **TAG cloud** — segments every candidate automatically, de-duplicates the parts and\n  ranks them by frequency. Multi-select tags to expand the next round.\n- **Round timeline** — every round is kept. Jump back to any earlier round at any time.\n- **Drag to combine** — drag one tag onto another to build a combined tag.\n- **Batch mode** — feed several search terms at once and merge all results into one list.\n- **Export** — copy everything, or export to TXT / CSV / Excel / JSON.\n- **Achievements** — five hidden ones. The entry point only appears once you earn your first.\n- **Update check** — checks quietly on startup and only speaks up when a new version\n  exists. You can also check manually from *Settings*.\n- **Fully local** — no account, no telemetry, nothing leaves your machine.\n\n### Downloads\n\n| Platform | File |\n| --- | --- |\n| Windows 10 / 11 (x64) | `redtato-words-0.9.9-win-x64.exe` — installer |\n| Windows 10 / 11 (x64) | `redtato-words-0.9.9-win-x64.zip` — portable |\n\n### Notes\n\n- The Windows installer is **unsigned**, so SmartScreen may warn you.\n  Choose **More info → Run anyway**.\n- macOS builds are published in a follow-up release.\n",
-  "publishedAt": "2026-10-08T08:57:38Z",
+  "version": "1.0.0",
+  "tag": "v1.0.0",
+  "releaseName": "RedtatoWords 1.0.0",
+  "releaseUrl": "https://github.com/zhiyumoke/RedtatoWords/releases/tag/v1.0.0",
+  "notes": "## RedtatoWords 1.0.0\n\nFirst stable release — and the first one with **macOS builds**.\n\n### What's new since 0.9.9\n\n**macOS support**\n\n- Apple silicon (`arm64`) and Intel (`x64`) builds, both as `.dmg` and `.zip`.\n- Invisible harvesting uses a different strategy on macOS: the session window stays\n  on screen at 1% opacity with click-through instead of being moved off-screen,\n  because AppKit pulls off-screen windows back.\n- If the invisible window ever stops rendering, the app falls back to showing the\n  session window and tells you so — harvesting never fails silently.\n\n**Theming**\n\n- New **Follow system** theme (now the default), alongside explicit light and dark.\n  It switches live when your OS appearance changes.\n- Light theme is a real first-class theme: every colour comes from a token defined\n  for both themes, and all sampled text meets WCAG contrast thresholds.\n\n**First-run experience**\n\n- Two-step onboarding with a seven-clip guided tour. Re-openable any time from Help.\n\n**Much faster lists**\n\n- The candidate list is now virtualised. With 3,000 candidates the DOM holds ~21\n  rows instead of 3,000 — initial fill went from ~1.1–1.9 s to ~0.4–0.6 s, selecting\n  all 3,000 from 3.9–14.2 s down to ~0.1 s, and deleting a row from up to 4.9 s down\n  to under 0.1 s.\n- Full keyboard navigation (`↑ ↓ Home End PageUp PageDown`, `Enter`, `Ctrl`/`Shift`\n  multi-select) with proper `listbox` / `option` roles.\n\n**Diagnostics**\n\n- Debug logging with an in-app log viewer (ring buffer plus a rotating file).\n- A crash screen with recovery actions instead of a blank window.\n\n**Reliability**\n\n- Workspace writes are atomic, keep a rolling backup, and recover automatically from\n  a corrupt file. A guard refuses to overwrite good data with an incomplete snapshot.\n- Single-instance lock — a second launch focuses the running window instead of\n  starting a second process over the same data.\n- Opening the sign-in window no longer closes it immediately. The previous build\n  treated the presence of a session cookie as proof of sign-in, but a signed-out\n  visitor receives one too; sign-in is now confirmed by reading the page itself.\n- The session window is released when closed instead of lingering in the background.\n- Every IPC channel validates its sender; the embedded browser view is locked to the\n  target site.\n- Update downloads follow redirects with digest verification, and a stall watchdog.\n  If the version manifest declares a checksum that cannot be parsed, the download is\n  **refused** rather than installed unchecked.\n- Your data directory is pinned, so renaming the app can never orphan an existing\n  workspace; older data is migrated automatically on first launch.\n- Configuration files written by editors that add a UTF-8 BOM are read correctly\n  instead of being treated as corrupt.\n\n### Downloads\n\n| Platform | File |\n| --- | --- |\n| Windows 10 / 11 (x64) | `redtato-words-1.0.0-win-x64.exe` — installer |\n| Windows 10 / 11 (x64) | `redtato-words-1.0.0-win-x64.zip` — portable |\n| macOS (Apple silicon) | `redtato-words-1.0.0-mac-arm64.dmg` — disk image |\n| macOS (Apple silicon) | `redtato-words-1.0.0-mac-arm64.zip` — archive |\n| macOS (Intel) | `redtato-words-1.0.0-mac-x64.dmg` — disk image |\n| macOS (Intel) | `redtato-words-1.0.0-mac-x64.zip` — archive |\n\n### SHA-256\n\nVerify with `certutil -hashfile <file> SHA256` on Windows, or\n`shasum -a 256 <file>` on macOS.\n\n```\nf43568bc6fc5b997df3a9af9938da93a0126560d7a09f03e3eef733d38921f11  redtato-words-1.0.0-win-x64.exe\n7689f76b1504d5ba8bc97e1e19ffed83ed602ad2171fcb61a5c695c5e1a7a052  redtato-words-1.0.0-win-x64.zip\n1b10b2345bfbbf960291dae6a90f89f77d5f25a5d21aa6bf8910b47d43bbd25e  redtato-words-1.0.0-mac-arm64.dmg\na2efb0449168f358fbf6883b10004f186ac91c12282f39b1b5afd8e6043071a8  redtato-words-1.0.0-mac-arm64.zip\n96a08560bf8ba3958e0dbdc2e58fbbc7b0ada6270c91be0d4377f8c0b83360d6  redtato-words-1.0.0-mac-x64.dmg\n120806a8134517a96fc927ce3f36119e4848b6a28291801258c6688a5a015d84  redtato-words-1.0.0-mac-x64.z",
+  "publishedAt": "2026-10-10T09:44:49Z",
   "assets": [
     {
-      "name": "redtato-words-0.9.9-win-x64.exe",
-      "url": "https://github.com/zhiyumoke/RedtatoWords/releases/download/v0.9.9/redtato-words-0.9.9-win-x64.exe",
-      "size": 115914668
+      "name": "redtato-words-1.0.0-mac-arm64.dmg",
+      "url": "https://github.com/zhiyumoke/RedtatoWords/releases/download/v1.0.0/redtato-words-1.0.0-mac-arm64.dmg",
+      "size": 131690744,
+      "sha512": "U1Se1HyYHPQSzgx7d/HfLvjHJdPlACVqMngTHW6nMXuY+yq0zCJNzvGK17++3I5g0f6aAOUZD74KeLMJ0+pN/A=="
     },
     {
-      "name": "redtato-words-0.9.9-win-x64.zip",
-      "url": "https://github.com/zhiyumoke/RedtatoWords/releases/download/v0.9.9/redtato-words-0.9.9-win-x64.zip",
-      "size": 154808444
+      "name": "redtato-words-1.0.0-mac-arm64.zip",
+      "url": "https://github.com/zhiyumoke/RedtatoWords/releases/download/v1.0.0/redtato-words-1.0.0-mac-arm64.zip",
+      "size": 131497334,
+      "sha512": "PmC//WAGDDcTrZm77bZOOZK5EK3D2TQ6/toBhZyHEwxghGJu0cfmGeWb8tfnNVx/thymYtJlwDxiYD7+zjN/kA=="
+    },
+    {
+      "name": "redtato-words-1.0.0-mac-x64.dmg",
+      "url": "https://github.com/zhiyumoke/RedtatoWords/releases/download/v1.0.0/redtato-words-1.0.0-mac-x64.dmg",
+      "size": 139433789,
+      "sha512": "44ps9WJNzYNqQMPIMV/qZt7pUHjdbU5ZGlUOdoh3DtJQ4wPvVzqHVzp7E3j3bLAR20whMbu4pzCNJ8dT6uZPWg=="
+    },
+    {
+      "name": "redtato-words-1.0.0-mac-x64.zip",
+      "url": "https://github.com/zhiyumoke/RedtatoWords/releases/download/v1.0.0/redtato-words-1.0.0-mac-x64.zip",
+      "size": 139281168,
+      "sha512": "VGTdeuo5yxpiKBGyIaSnu1iA2BwP9N96/yvR43Ud0LzzbTZ2p5nj/Bg7/M2rhPumR2yQd476qCsEALfHj5f9yw=="
+    },
+    {
+      "name": "redtato-words-1.0.0-win-x64.exe",
+      "url": "https://github.com/zhiyumoke/RedtatoWords/releases/download/v1.0.0/redtato-words-1.0.0-win-x64.exe",
+      "size": 115955854,
+      "sha512": "WnUah+ap3HxhkbMtv/eBQnUVbeRu5dZbILugdt31zw+hN5Mil7aiWvCC0wijjZqmRe4tuKGTW3kSo+vMMfytCg=="
+    },
+    {
+      "name": "redtato-words-1.0.0-win-x64.zip",
+      "url": "https://github.com/zhiyumoke/RedtatoWords/releases/download/v1.0.0/redtato-words-1.0.0-win-x64.zip",
+      "size": 154856209,
+      "sha512": "BrSlkXiqdoFZ8EtzRiJ27uxsGQpi0jcXRRdAz0vUd3zZKYDnTz1i2Bj139wWKe63BOMxlYvhscmJb4X0po07oQ=="
     }
   ]
 }
